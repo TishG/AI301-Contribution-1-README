@@ -111,15 +111,15 @@ Migrated the @backstage-community/plugin-xcmetrics plugin to support Backstage's
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when submitted]
+**PR Link:** [https://github.com/backstage/community-plugins/pull/9454](https://github.com/backstage/community-plugins/pull/9454)
 
-**PR Description:** [Draft or final PR description - much of the content above can be adapted]
+**PR Description:** Adds the frontend system to the xcmetrics plugin by adding a new alpha route
 
 **Maintainer Feedback:**
 - [Date]: [Summary of feedback received]
 - [Date]: [How you addressed it]
 
-**Status:** [Awaiting review / Iterating / Approved / Merged]
+**Status:** Awaiting review
 
 ---
 
