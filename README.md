@@ -3,7 +3,7 @@
 **Contribution Number:** 1  
 **Student:** Tish (Latisha) Griffiths  
 **Issue:** [Github Issue](https://github.com/backstage/community-plugins/issues/7539)  
-**Status:** Phase IV In Progress
+**Status:** Phase IV In Progress. 
 
 ---
 
@@ -116,10 +116,19 @@ Migrated the @backstage-community/plugin-xcmetrics plugin to support Backstage's
 **PR Description:** Adds the frontend system to the xcmetrics plugin by adding a new alpha route
 
 **Maintainer Feedback:**
-- [Date]: [Summary of feedback received]
-- [Date]: [How you addressed it]
+- Jun 11, 2026: Copilot AI (automated) completed multiple review passes, flagging: a typo in the exported API extension name (`xCRMetricsApiExtension`, later `xcrmetricsApiExtension` in the generated API report — should be `xcmetricsApiExtension`), timestamp fields in the mock data using seconds instead of microseconds, mock target/error/warning generation referencing target IDs that might not exist, a non-isolated PRNG causing unstable mock data across calls, `package.json` `main`/`types`/`exports` pointing at TS/TSX source instead of built output, and legacy route refs/components not being wrapped for the new frontend system (missing `compatWrapper` / `convertLegacyRouteRef(s)`).
+- [~1 week ago]: Maintainer @04kash requested changes:
+  - Questioned why `workspaces/xcmetrics/backstage.json` was downgraded from 1.52.0 to 1.51.2 — flagged as unintended since the workspace should stay on its current version, not downgrade.
+  - Asked for a `dev/alpha/index.ts` file (referencing a prior PR's pattern) so the alpha entrypoint is easy to test locally when developing/reviewing.
+  - Asked for a `start:alpha` script (`backstage-cli package start --entrypoint dev/alpha`) to make running the alpha dev app easier.
+  - Asked for a title and icon on the `xcmetricsPage` nav item.
+  - Asked me to rebase the branch.
+- Jun 11, 2026: backstage-goalie bot flagged that commits weren't DCO-signed and needed to be before review could proceed.
+- Addressed all of the above: reverted `backstage.json` back to 1.52.0 and aligned `.yarnrc.yml`'s yarn-plugin spec to match; added `dev/alpha/index.tsx` (using Claude Code) modeled on the referenced PR; added the `start:alpha` script; added a `title` ('XCMetrics') and `icon` (`AssessmentIcon`) to `xcmetricsPage`; wrapped the legacy layout with `compatWrapper` and converted route refs via `convertLegacyRouteRef`/`convertLegacyRouteRefs`; renamed `xCRMetricsApiExtension` → `xcmetricsApiExtension` throughout (including the API report); added a `@alpha` annotation to the default export; added `@backstage/ui` styles to the dev instance; updated the README's new-frontend-system example to import `createApp` from `@backstage/frontend-defaults` instead of `@backstage/app-defaults`; added a test for the new `/alpha` entrypoint; rebased onto main; retrofitted DCO sign-off via `git rebase --signoff`.
+- Wed, Jul 8, 2026: Rebased main again, addressed remaining comments, committed and pushed, then resolved CI failures from the merge.
+- Wed, Jul 9, 2026 (~5 hrs): Addressed remaining Copilot comments and requested re-review from @04kash. Ran into additional CI failures that took a while to resolve due to unclear error output.
 
-**Status:** Awaiting review
+**Status:** Changes requested — addressed, re-review requested (as of Jul 9, 2026). Still open as of Jul 13, 2026.
 
 ---
 
@@ -127,7 +136,12 @@ Migrated the @backstage-community/plugin-xcmetrics plugin to support Backstage's
 
 ### Technical Skills Gained
 
-[What you learned technically]
+- Migrating a Backstage plugin to the new frontend system: building an /alpha entrypoint with PageBlueprint and ApiBlueprint extensions, and wiring them into a createFrontendPlugin
+- Reading and adapting an existing migration (Dynatrace, ADR) as a reference when official docs didn't cover my exact case
+- Debugging CI pipelines: fixing yarn.lock mismatches, generating missing API reports (report-alpha.api.md), adding missing @alpha JSDoc release tags, and resolving prettier/package-sync errors
+- Retrofitting DCO sign-off onto existing commits with `git rebase --signoff`, and configuring a GitHub no-reply email for privacy
+- Using Claude Code to scaffold mock data and dev scripts (DevXcmetricsApi, dev/alpha/index.tsx) for local development without a real backend
+- Wrapping legacy components/route refs for compatibility with the new frontend system using `compatWrapper` and `convertLegacyRouteRef(s)`
 
 ### Challenges Overcome
 
@@ -139,12 +153,17 @@ Used Claude and Claude Code to work through migration steps, debug CI errors, an
 
 ### What I'd Do Differently Next Time
 
-[Reflection on your process]
+- Learn the relevant lint/CI commands (e.g., API report generation, prettier checks) upfront and run them locally before pushing, rather than discovering failures one at a time in CI
+- Lean on AI tools more throughout the process
+- Double check the contribution README's own guidelines more carefully before considering a section "done," to make sure documentation and process requirements are fully met
 
 ---
 
 ## Resources Used
 
-- [Link to helpful documentation]
-- [Tutorial or Stack Overflow post that helped]
-- [GitHub issues or discussions that helped]
+- Backstage frontend system migration guide: https://backstage.io/docs/frontend-system/building-plugins/migrating/
+- Dynatrace plugin frontend-system migration PR (used as a reference implementation): https://github.com/backstage/community-plugins/pull/8948
+- ADR plugin (used as a closer real-world reference than the migration guide's standalone-page example)
+- Prior PR's dev/alpha entrypoint pattern, referenced by @04kash: https://github.com/backstage/community-plugins/pull/5222
+- community-plugins CONTRIBUTING.md — changesets and DCO sign-off requirements: https://github.com/backstage/community-plugins/blob/master/CONTRIBUTING.md
+- Claude Code — used to generate mock data, dev scripts, and work through migration/CI debugging
